@@ -1,10 +1,6 @@
-general.import = [
-  # uncomment the flavour you want below:
-  # "~/.config/alacritty/catppuccin-latte.toml",
-  # "~/.config/alacritty/catppuccin-frappe.toml"
-  # "~/.config/alacritty/catppuccin-macchiato.toml"
-  "~/.config/alacritty/catppuccin-mocha.toml",
-]
+[general]
+import = ["themes/noctalia.toml"]
+# import = ["themes/catppuccin-mocha.toml"]
 
 [window]
 dimensions = { columns = 120, lines = 30 }
