@@ -56,7 +56,7 @@ systemctl --user enable --now hyprpaper.service
 ## Packages
 
 ```
-kwallet # check to change (gnome-keyring is used by forticlient)
+gnome-keyring
 ```
 
 ## Noctalia scaling
