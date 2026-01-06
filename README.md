@@ -43,8 +43,13 @@ Current=abstractdark-sddm-theme
 ## UWSM
 
 ```
-systemctl --user enable --now waybar.service
 systemctl --user enable --now hyprpolkitagent.service
+```
+
+### Old
+
+```
+systemctl --user enable --now waybar.service
 systemctl --user enable --now hyprpaper.service
 ```
 
@@ -53,6 +58,10 @@ systemctl --user enable --now hyprpaper.service
 ```
 kwallet # check to change (gnome-keyring is used by forticlient)
 ```
+
+## Noctalia scaling
+
+- change value of `readonly property real capsuleHeight` in `noctalia-shell/Commons/Style.qml` (set comfortable to 1)
 
 # Other
 
@@ -74,11 +83,8 @@ set `MAKEFLAGS="--jobs=$(nproc)"` in /etc/makepkg.conf
 
 # TODO
 
-- fix wlogout icon path (change wlogout ?)
 - add all required packages to install
   - (add a script to automate the install process)
-- fix waybar media controller not working after a bit (same for media key, so may be something else)
-- change dunst notification timeout
 - clean files
   - aliases
   - config
