@@ -17,21 +17,27 @@ separator_color = frame
 highlight = "#8aadf4"
 
 [urgency_low]
+match_urgency = low
 background = "#24273a"
 foreground = "#cad3f5"
 
-[urgency_normal]
+[urgency_medium]
+match_urgency = medium
 background = "#24273a"
 foreground = "#cad3f5"
 
 [urgency_critical]
+match_urgency = critical
 background = "#24273a"
 foreground = "#cad3f5"
 frame_color = "#f5a97f"
+timeout = 0
 
 # Specific app timeout
 [Discord]
+appname = Discord
 timeout = 0
 
 [Vesktop]
+appname = Vesktop
 timeout = 0
