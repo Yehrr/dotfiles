@@ -1,0 +1,1 @@
+curl -sL https://github.com/noctalia-dev/noctalia-shell/releases/latest/download/noctalia-latest.tar.gz | tar -xz --strip-components=1 -C ~/dotfiles/hyprland/.config/quickshell
