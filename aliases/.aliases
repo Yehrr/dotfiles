@@ -1,19 +1,10 @@
 alias ls='ls --color'
 alias ll='ls -alF'
 alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
 alias c='xclip -selection clipboard'
 
 # OpenHue
 alias h='openhue set room Chambre -b'
-
-# Yay
-alias y='yay -S'
-alias yr='yay -R'
-alias ys='yay -Ss'
-alias yaya='yay -S --aur'
-alias yayr='yay -S --repo'
 
 # Kitty
 alias sshk='kitten ssh'
