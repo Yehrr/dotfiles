@@ -18,16 +18,8 @@ sudo pacman -S stow
 sudo pacman -S fzf
 
 # TODO: list things
-# kitty
+# alacritty
 # hyprland
-# hypridle
-# hyprlock
-# hyprpaper
-# waybar
-# rofi
-# swaync
-# swayosd
-# wlogout
 # mpv
 # thunar
 # thunar_archive_plugin # TODO change

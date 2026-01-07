@@ -84,10 +84,6 @@ set `MAKEFLAGS="--jobs=$(nproc)"` in /etc/makepkg.conf
 # TODO
 
 - add all required packages to install
-  - (add a script to automate the install process)
 - clean files
-  - aliases
-  - config
-  - env
   - zshenv, zshrc
 - auto install/setup script
