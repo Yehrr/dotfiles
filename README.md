@@ -87,3 +87,6 @@ set `MAKEFLAGS="--jobs=$(nproc)"` in /etc/makepkg.conf
 - clean files
   - zshenv, zshrc
 - auto install/setup script
+
+## Polkit
+- https://wiki.archlinux.org/title/Polkit#Bypass_password_prompt
