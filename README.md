@@ -46,13 +46,6 @@ Current=abstractdark-sddm-theme
 systemctl --user enable --now hyprpolkitagent.service
 ```
 
-### Old
-
-```
-systemctl --user enable --now waybar.service
-systemctl --user enable --now hyprpaper.service
-```
-
 ## Packages
 
 ```
@@ -61,13 +54,16 @@ gnome-keyring
 
 ## Noctalia scaling
 
-- change value of `readonly property real capsuleHeight` in `noctalia-shell/Commons/Style.qml` (set comfortable to 1)
+- change value of in `noctalia-shell/Commons/Style.qml`
+  - in 3.8, change value of `readonly property real capsuleHeight` (set comfortable to 1)
+  - in 4.1, change `spacious` of `readonly property real barHeight` to `60:60`
+    - still need to fix bottom margin
 
 # Other
 
 ## Make
 
-set `MAKEFLAGS="--jobs=$(nproc)"` in /etc/makepkg.conf
+set `MAKEFLAGS="--jobs=$(nproc)"` in /etc/makepkg.conf to use all core
 
 ## Kernel config
 
