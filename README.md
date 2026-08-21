@@ -47,12 +47,6 @@ sudo systemctl --user enable --now hyprpolkitagent.service
 sudo systemctl --user enable --now input-remapper
 ```
 
-## Noctalia scaling
-
-- change value in `noctalia-shell/Commons/Style.qml`
-  - in 3.8, change value of `readonly property real capsuleHeight` (set comfortable to 1)
-  - in 4.3, change `spacious` of `getCapsuleHeightForDensity` to `0.80`
-
 # Other
 
 ## Downgrade package

@@ -5,7 +5,7 @@ local hostname = getHostnameSuffix()
 
 hl.on("hyprland.start", function()
     hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
-    hl.exec_cmd("uwsm app -- qs")
+    hl.exec_cmd("uwsm app -- noctalia")
     hl.exec_cmd("uwsm app -- udiskie")
     hl.exec_cmd("sleep 2 && uwsm app -- nextcloud") -- forced to sleep to appear in tray
     hl.exec_cmd("sleep 2 && uwsm app -- keepassxc") -- forced to sleep to appear in tray

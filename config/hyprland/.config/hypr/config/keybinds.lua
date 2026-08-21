@@ -5,7 +5,7 @@
 -- ----------------------------------- MAIN ----------------------------------- #
 
 local terminal = "alacritty"
-local launcher = "qs ipc call launcher toggle"
+local launcher = "noctalia msg panel-toggle launcher"
 local fileManager = "thunar" -- TODO: switch to yazi ?
 local screenshot = "hyprshot -m region"
 local browserPerso = "firefox" -- --profile "/home/yehrol/.mozilla/firefox/4seUQjF1.Profile 1" # FIXME no way of doing this with new profile for now
@@ -61,8 +61,8 @@ hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("qs ipc call brightness decreas
 -- --------------------------- MEDIA PLAYER CONTROL --------------------------- #
 -- Requires playerctl
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
-hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl --player=spotify play-pause"), { locked = true })
-hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl --player=spotify play-pause"), { locked = true })
+hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
 
 -- ---------------------------- WINDOW MANIPULATION --------------------------- #
