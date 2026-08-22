@@ -7,7 +7,7 @@
 local terminal = "alacritty"
 local launcher = "noctalia msg panel-toggle launcher"
 local fileManager = "thunar" -- TODO: switch to yazi ?
-local screenshot = "hyprshot -m region"
+local screenshot = "noctalia msg screenshot-region"
 local browserPerso = "firefox" -- --profile "/home/yehrol/.mozilla/firefox/4seUQjF1.Profile 1" # FIXME no way of doing this with new profile for now
 -- $browserWork = firefox #-P "Work" # FIXME no way of doing this with new profile for now
 local reloadHypr = "hyprctl reload && notify-send \"Hyprland configuration reloaded\""
@@ -48,15 +48,15 @@ hl.bind(mainMod .. " + CTRL + ALT + 9", hl.dsp.exec_cmd(reloadHypr))
 -- bindel = ,XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+
 -- bindel = ,XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-
 -- bindel = ,XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("qs ipc call volume increase"), { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("qs ipc call volume decrease"), { locked = true, repeating = true })
-hl.bind("XF86AudioMute", hl.dsp.exec_cmd("qs ipc call volume muteOutput"), { locked = true, repeating = true })
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("noctalia msg volume-up 2"), { locked = true, repeating = true })
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("noctalia msg volume-down 2"), { locked = true, repeating = true })
+hl.bind("XF86AudioMute", hl.dsp.exec_cmd("noctalia msg volume-mute"), { locked = true, repeating = true })
 
 -- -------------------------------- BRIGHTNESS -------------------------------- #
 -- bindel = ,XF86MonBrightnessUp, exec, brightnessctl s 10%+
 -- bindel = ,XF86MonBrightnessDown, exec, brightnessctl s 10%-
-hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("qs ipc call brightness increase"), { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("qs ipc call brightness decrease"), { locked = true, repeating = true })
+-- hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("qs ipc call brightness increase"), { locked = true, repeating = true })
+-- hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("qs ipc call brightness decrease"), { locked = true, repeating = true })
 
 -- --------------------------- MEDIA PLAYER CONTROL --------------------------- #
 -- Requires playerctl
