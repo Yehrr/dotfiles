@@ -1,6 +1,5 @@
 [general]
-import = ["themes/noctalia.toml"]
-# import = ["themes/catppuccin-mocha.toml"]
+import = ["themes/catppuccin-mocha.toml"]
 
 [window]
 dimensions = { columns = 120, lines = 30 }
