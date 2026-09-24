@@ -1,22 +1,20 @@
-# explicit installed : pacman -Qqe
+# explicit installed : pacman -Qm
 
 # Base
-rtl8761b-firmware
 snap-pac-grub
-# snapper-rollback
 xwaylandvideobridge
 
-# Hyprland
-noctalia-qs
-
 # Cli
+btdu-bin
 openhue-cli
 
 # Gaming
 xivlauncher
 
 #
-coolercontrol
+# coolercontrol
+# coolercontrold
+# forticlient
 input-remapper-git
 vesktop
 visual-studio-code-bin

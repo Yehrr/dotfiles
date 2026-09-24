@@ -7,13 +7,11 @@ base-devel
 blueman
 brightnessctl
 cmake
-# dhcpcd
 efibootmgr
 git
 git-lfs
 grub
 grub-btrfs
-# iwd
 libnewt
 linux
 linux-firmware
@@ -26,6 +24,7 @@ snap-pac
 snapper
 sudo
 uwsm
+wpa_supplicant
 
 # Hyprland
 hyprland
@@ -35,14 +34,16 @@ xdg-desktop-portal-hyprland
 xorg-xhost
 
 # Fonts
+# TODO faire le tri
 noto-fonts
 noto-fonts-cjk
+noto-fonts-emoji
 noto-fonts-extra
-# otf-font-awesome
+otf-font-awesome
 ttf-nerd-fonts-symbols-mono
-# ttf-noto-nerd
-# ttf-ubuntu-nerd
-# woff2-font-awesome
+ttf-noto-nerd
+ttf-ubuntu-nerd
+woff2-font-awesome
 
 # Cli
 alacritty
