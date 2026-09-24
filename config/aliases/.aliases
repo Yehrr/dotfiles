@@ -23,3 +23,5 @@ alias sw='grim -g "$(slurp)" - | swappy -f -'
 # Note
 alias ndn='nvim "./daily-notes/$(date '+%Y-%m-%d').md"' # new daily note
 # TODO add a way to easily go to note dir ? (cd alias, zoxide, sym link, ...)
+
+alias logout='hyprctl dispatch "hl.dsp.exit()"'
