@@ -26,9 +26,10 @@ sudo
 uwsm
 wpa_supplicant
 
-# Hyprland
+# DE
 hyprland
 hyprpolkitagent
+noctalia
 xdg-desktop-portal-gtk
 xdg-desktop-portal-hyprland
 xorg-xhost
@@ -102,7 +103,6 @@ nano
 neovim
 network-manager-applet
 nextcloud-client
-noctalia-qs
 nwg-look
 obs-studio
 obsidian
