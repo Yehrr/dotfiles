@@ -36,15 +36,11 @@ Current=abstractdark-sddm-theme
 - edit the file `/etc/default/grub` and set `GRUB_THEME="/boot/grub/themes/yorha/theme.txt"`
 - update grub `sudo grub-mkconfig -o /boot/grub/grub.cfg`
 
-## Hyprland specific
-
-- install xorg-xhost and hyprpolkitagent for process that need privilege (ex: timeshift)
-
 ## UWSM
 - TODO clean
 ```
 sudo systemctl --user enable --now hyprpolkitagent.service
-sudo systemctl --user enable --now input-remapper
+sudo systemctl --user enable --now input-remapper # if installed
 ```
 
 # Other
