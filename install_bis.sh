@@ -385,6 +385,10 @@ main() {
         echo '    useradd -m -g users -G wheel <username>'
         echo '    passwd <username>'
         echo '    su - <username>'
+        _info "Then set the EDITOR variable:"
+        echo '      export EDITOR=nano   # e.g. in ~/.zshrc, or EDITOR="nano" in /etc/makepkg.conf'
+        _info "Finally, grant sudo access to the new user (activate the %wheel line):"
+        echo '      sudo visudo          # uncomment: %wheel  ALL=(ALL:ALL) ALL'
         exit 1
     fi
 
