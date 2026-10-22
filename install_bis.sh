@@ -121,7 +121,7 @@ install_yay() {
     fi
     _info "PKGBUILD exists: yes"
 
-    if ! makepkg -sC --noconfirm -si --skippgpcheck -C "$tmp/yay"; then
+    if ! (cd "$tmp/yay" && makepkg -s --noconfirm -si --skippgpcheck); then
         _error "Failed to build yay, see output above."
         rm -rf "$tmp"
         exit 1
