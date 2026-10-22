@@ -70,19 +70,8 @@ yay
 zip
 zsh
 
-# Gaming
-gamemode
-goverlay
-lutris
-mangohud
-retroarch
-retroarch-assets-ozone
-retroarch-assets-xmb
-steam
-
 # 
 btrfs-assistant
-calibre
 cups
 docker
 docker-compose
@@ -104,12 +93,9 @@ neovim
 network-manager-applet
 nextcloud-client
 nwg-look
-obs-studio
 obsidian
-openrgb
 pavucontrol
 playerctl
-protontricks
 qbittorrent
 sbt
 signal-desktop

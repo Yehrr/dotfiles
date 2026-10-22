@@ -1,0 +1,17 @@
+# explicit installed : pacman -Qqe
+
+# Gaming
+gamemode
+goverlay
+lutris
+mangohud
+retroarch
+retroarch-assets-ozone
+retroarch-assets-xmb
+steam
+
+# 
+calibre
+obs-studio
+openrgb
+protontricks

@@ -1,0 +1,10 @@
+# explicit installed : pacman -Qm
+
+# Gaming
+xivlauncher
+protonplus
+
+# forticlient-vpn
+input-remapper-git
+vesktop
+visual-studio-code-bin

@@ -2,20 +2,16 @@
 
 # Base
 snap-pac-grub
-xwaylandvideobridge
 
 # Cli
 btdu-bin
-openhue-cli
 
 # Gaming
-xivlauncher
+#xivlauncher
+#protonplus
 
 #
-# coolercontrol
-# coolercontrold
-# forticlient
-input-remapper-git
-vesktop
+# forticlient-vpn
+#input-remapper-git
+#vesktop
 visual-studio-code-bin
-xpadneo-dkms
