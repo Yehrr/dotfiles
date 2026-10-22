@@ -81,8 +81,12 @@ install_base() {
         exit 1
     fi
 
-    # make sure the current user can actually use sudo before going further
-    if ! sudo -n true >/dev/null 2>&1 && ! sudo true; then
+    # make sure the current user can actually use sudo before going further.
+    # NB: use 'sudo -v' (validate/refresh credentials) rather than 'sudo true'
+    # so the user is prompted for their password exactly once here, and every
+    # subsequent sudo call in the script runs without re-prompting (the 5 min
+    # timestamp keeps refreshing as the script progresses).
+    if ! sudo -v; then
         _error "The current user cannot run sudo (not in the 'wheel' group?). Aborting."
         exit 1
     fi
