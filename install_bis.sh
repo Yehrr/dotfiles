@@ -208,11 +208,12 @@ install_packages() {
 # force the symlink (like stow --adopt, but explicit)
 stow_pkg() {
     local pkg="$1" target="${2:-$HOME}"
-    if (cd "$SRC" && stow --target "$target" "$pkg") >> "$LOG_FILE" 2>&1; then
+    # stow must be run from the directory containing the packages (config/)
+    if (cd "$SRC/config" && stow --target "$target" "$pkg") >> "$LOG_FILE" 2>&1; then
         _info "stow: $pkg -> $target"
     else
         _warning "stow: conflict or failure on '$pkg' (old config backed up in ~/.dotfiles-backup/)"
-        if (cd "$SRC" && stow --target "$target" --adopt "$pkg") >> "$LOG_FILE" 2>&1; then
+        if (cd "$SRC/config" && stow --target "$target" --adopt "$pkg") >> "$LOG_FILE" 2>&1; then
             _info "stow: '$pkg' adopted (old config was moved aside)"
         else
             _error "stow: failed to install '$pkg', see $LOG_FILE"
@@ -241,17 +242,13 @@ stow_etc_packages() {
         sddm.conf
     )
 
-    # fstab is machine-specific (UUID, snapshot, ...): don't overwrite it
-    if [[ -f "$SRC/etc/desktop/fstab" ]] && [[ $(prompt "Deploy etc/desktop/fstab to /etc/fstab? (machine-specific, check first)") == 1 ]]; then
-        stow_pkg "desktop/fstab" "/etc"
-    fi
-
     local f
     for f in "${etc_pkgs[@]}"; do
         [[ -f "$SRC/etc/$f" ]] || continue
         _info "stow: etc/$f -> /etc"
-        sudo stow --target /etc -- "$f" >> "$LOG_FILE" 2>&1 \
-            || sudo stow --target /etc --adopt -- "$f" >> "$LOG_FILE" 2>&1 \
+        # stow must be run from the directory containing the files (etc/)
+        sudo bash -c "cd '$SRC/etc' && stow --target /etc -- '$f'" >> "$LOG_FILE" 2>&1 \
+            || sudo bash -c "cd '$SRC/etc' && stow --target /etc --adopt -- '$f'" >> "$LOG_FILE" 2>&1 \
             || _error "stow /etc/$f failed (see $LOG_FILE)"
     done
 }
