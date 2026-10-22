@@ -371,10 +371,14 @@ setup_shell() {
         _info "Shell already zsh"
     fi
 
-    # oh-my-posh font
-    oh-my-posh font install JetBrainsMono >> "$LOG_FILE" 2>&1 \
-        && _info "JetBrainsMono font installed" \
-        || _warning "Failed to install JetBrainsMono font"
+    # oh-my-posh font (check if already installed first)
+    if fc-list | grep -qi "JetBrains Mono"; then
+        _info "JetBrainsMono font already installed"
+    else
+        oh-my-posh font install JetBrainsMono >> "$LOG_FILE" 2>&1 \
+            && _info "JetBrainsMono font installed" \
+            || _warning "Failed to install JetBrainsMono font (install it manually if needed)"
+    fi
 }
 
 # ---------------------------------------------------------------------------- #
