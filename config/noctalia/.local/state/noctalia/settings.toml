@@ -1,4 +1,4 @@
-config_version = 14
+config_version = 15
 
 [accessibility]
 ui_scale = 1.2000000104308128
@@ -28,10 +28,11 @@ widget_spacing = 10
     [[bar.default.capsule_group]]
     accordion = false
     accordion_direction = "end"
+    border_width = 1.0
     enabled = true
     fill = "surface_variant"
     id = "g1"
-    members = [ "cpu", "ram", "sysmon" ]
+    members = [ "cpu", "ram", "GPU", "VRAM", "DISK" ]
     opacity = 1.0
     padding = 10.0
     radius = 6.0
@@ -188,6 +189,9 @@ scale = 1.2000000104308128
 
 [shell.launcher]
 categories = false
+default_view = "all"
+show_session_button = false
+show_settings_button = false
 
 [shell.panel]
 control_center_placement = "floating"
@@ -200,7 +204,7 @@ source = "builtin"
 wallpaper_scheme = "m3-content"
 
 [wallpaper]
-directory = "/home/yehrol/dotfiles/esthetic/wallpapers"
+directory = "/home/yehrol/dotfiles/themes/wallpapers"
 
     [wallpaper.default]
     path = "/home/yehrol/dotfiles/esthetic/wallpapers/221.png"
@@ -217,6 +221,21 @@ directory = "/home/yehrol/dotfiles/esthetic/wallpapers"
 [weather]
 enabled = false
 
+[widget.DISK]
+stat = "disk_free"
+type = "sysmon"
+visualization = "none"
+
+[widget.GPU]
+stat = "gpu_usage"
+type = "sysmon"
+visualization = "none"
+
+[widget.VRAM]
+stat = "gpu_vram"
+type = "sysmon"
+visualization = "none"
+
 [widget.clock]
 format = "{:%H:%M, %d %B %Y}"
 
@@ -230,6 +249,8 @@ visualization = "none"
 artist_first = true
 hide_when_no_media = true
 max_length = 350
+rotate_album_art = true
+show_progress = true
 title_scroll = "on_hover"
 
 [widget.ram]
@@ -237,14 +258,24 @@ stat = "ram_pct"
 visualization = "none"
 
 [widget.sysmon]
-stat = "disk_free"
+stat = "ram_pct"
 visualization = "none"
 
 [widget.tray]
 detached_panel = true
 drawer = true
 drawer_columns = 5
-pinned = [ "Nextcloud", "Vesktop", "KeePassXC", "net.lutris.Lutris", "steam", "Ankama Launcher1", "udiskie" ]
+pinned = [
+    "Nextcloud",
+    "Vesktop",
+    "KeePassXC",
+    "net.lutris.Lutris",
+    "steam",
+    "Ankama Launcher1",
+    "udiskie",
+    "qBittorrent",
+    "flameshot"
+]
 
 [widget.volume.actions]
 scroll_down = "volume-down 2"
