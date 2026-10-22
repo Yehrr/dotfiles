@@ -1,6 +1,6 @@
 export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
 
-export XCURSOR_SIZE=24
+# export XCURSOR_SIZE=24
 
 # XDG specifications
 export XDG_CURRENT_DESKTOP=Hyprland
@@ -8,8 +8,8 @@ export XDG_SESSION_TYPE=wayland
 export XDG_SESSION_DESKTOP=Hyprland
 
 # Graphics optimizations
-export WLR_RENDERER=vulkan
-export ELECTRON_OZONE_PLATFORM_HINT=wayland
-export LIBVA_DRIVER_NAME=radeonsi
+# export WLR_RENDERER=vulkan
+# export ELECTRON_OZONE_PLATFORM_HINT=wayland
+# export LIBVA_DRIVER_NAME=radeonsi
 
-export QT_QPA_PLATFORMTHEME=gtk3
+# export QT_QPA_PLATFORMTHEME=gtk3
