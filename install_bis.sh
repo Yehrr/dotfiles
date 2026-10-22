@@ -107,7 +107,8 @@ install_yay() {
     local tmp
     tmp=$(mktemp -d)
     git clone --depth 1 https://aur.archlinux.org/yay.git "$tmp/yay"
-    makepkg -sC --noconfirm -si --skippgpcheck -C "$tmp/yay" || _error "Failed to build yay"
+    makepkg -sC --noconfirm -si --skippgpcheck -C "$tmp/yay" \
+        || { _error "Failed to build yay"; rm -rf "$tmp"; exit 1; }
     rm -rf "$tmp"
 }
 
