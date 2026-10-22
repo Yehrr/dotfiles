@@ -6,12 +6,7 @@ snap-pac-grub
 # Cli
 btdu-bin
 
-# Gaming
-#xivlauncher
-#protonplus
-
 #
-# forticlient-vpn
-#input-remapper-git
-#vesktop
+forticlient-vpn
+input-remapper-git
 visual-studio-code-bin
