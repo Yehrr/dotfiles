@@ -349,6 +349,11 @@ setup_makepkg() {
 setup_services() {
     _step "Enabling services"
 
+    # SDDM display manager
+    if systemctl list-unit-files sddm.service >/dev/null 2>&1; then
+        sudo systemctl enable sddm.service && _info "sddm enabled"
+    fi
+
     command -v hyprpolkitagent >/dev/null 2>&1 \
         && systemctl --user enable --now hyprpolkitagent.service \
         && _info "hyprpolkitagent enabled"
