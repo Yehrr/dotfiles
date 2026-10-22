@@ -359,7 +359,7 @@ main() {
     if [[ $EUID -eq 0 ]]; then
         _error "This script must NOT be run as root: yay cannot be installed (makepkg refuses to run as root)."
         _info "Create a user first if needed, then re-run the script as that user:"
-        echo '    sudo useradd -m -g users -G wheel -s /usr/bin/zsh <username>'
+        echo '    sudo useradd -m -g users -G wheel <username>'
         echo '    sudo passwd -u <username>   # unlock the account'
         exit 1
     fi
