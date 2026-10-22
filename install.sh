@@ -1,134 +1,461 @@
-# TODO check https://github.com/cebem1nt/dotfiles/blob/main/install.sh
+#!/usr/bin/env bash
+# ============================================================================ #
+#                        install_bis.sh - full setup script                    #
+# Installs and configures everything present in this repo:                    #
+#   - packages (repo + AUR, base + optional desktop)                          #
+#   - dotfiles via GNU stow (~ and /etc)                                      #
+#   - SDDM / GRUB themes, locale, makepkg, services                           #
+# Based on install.sh + README.md.                                            #
+# ============================================================================ #
 
-SRC=$(dirname "$0")
-LOG_FILE="install.log"
+set -uo pipefail
 
-_info() { printf '\033[32m[INFO]\033[0m %s\n' "$*"; }
+SRC="$(cd "$(dirname "$0")" && pwd)"
+LOG_FILE="$SRC/install_bis.log"
+DESKTOP_MODE=0        # 1 if "desktop" mode is requested (gaming/desktop packages)
+
+# ---------------------------------------------------------------------------- #
+#                                  HELPERS                                     #
+# ---------------------------------------------------------------------------- #
+_info()    { printf '\033[32m[INFO]\033[0m %s\n' "$*"; }
 _warning() { printf '\033[33m[WARNING]\033[0m %s\n' "$*"; }
-_error() { printf '\033[31m[ERROR]\033[0m %s\n' "$*"; }
+_error()   { printf '\033[31m[ERROR]\033[0m %s\n' "$*"; }
+_step()    { printf '\n\033[1;36m==> %s\033[0m\n' "$*"; }
 
 prompt() {
+    local CHOICE=""
     read -r -p "$1"$'\033[32m [Y/n] \033[0m' CHOICE
-    if [ -z "$CHOICE" ]; then 
-        echo 1 
+    if [ -z "$CHOICE" ]; then
+        echo 1
     else
-        case "$CHOICE" in 
-            n|N|No|no ) echo 0;;
-            y|Y|* ) echo 1;;
+        case "$CHOICE" in
+            n|N|No|no) echo 0 ;;
+            *)         echo 1 ;;
         esac
     fi
 }
 
-check_packges() {
-    while IFS= read -r LINE; do
-        if [[ -z "$LINE" ]] || [[ ${LINE# } == \#* ]]; then 
-            continue
-        fi
-
-        PKG="${LINE//[[:space:]]/}"
-
-        if ! pacman -Q "$PKG" >/dev/null 2>&1 ; then
-            echo -n "$PKG "
-        fi
-    done < $1
+prompt_choice() {
+    local CHOICE=""
+    read -r -p "$1"$'\033[32m \033[0m' CHOICE
+    echo "$CHOICE"
 }
 
-verify_packages() {
-    _info "Verifying necessary packages...."
+# list the packages from $1 that are not installed
+check_packages() {
+    local PKG
+    while IFS= read -r LINE; do
+        [[ -z "${LINE// }" || "${LINE# }" == \#* ]] && continue
+        PKG="${LINE//[[:space:]]/}"
+        pacman -Q "$PKG" >/dev/null 2>&1 || echo -n "$PKG "
+    done < "$1"
+}
 
-    if which pacman >/dev/null 2>&1; then
-		# TODO check if files exist
-        MISSING=$(check_packges "$SRC/packages.txt") 
-        MISSING_AUR=$(check_packges "$SRC/packages.aur.txt") 
+log() { tee -a "$LOG_FILE" | cat; }
 
-        if [[ -n "$MISSING" ]]; then
-            _warning "The following packages are not installed:"
-            echo "    $MISSING"
-            _warning "If you know what you're doing, skip"
+# ---------------------------------------------------------------------------- #
+#                                 PREREQUISITES                                #
+# ---------------------------------------------------------------------------- #
+preflight() {
+    _step "Pre-flight checks"
 
-            if [[ $(prompt "Install missing packages?") == 1 ]]; then
-                sudo pacman -Syu $MISSING
-            fi
-		else
-			_info "Everything is already installed"
-        fi
+    if ! command -v pacman >/dev/null 2>&1; then
+        _error "pacman not found: this script is meant for Arch/Arch-based distros. Aborting."
+        exit 1
+    fi
 
-        if [[ -n "$MISSING_AUR" ]]; then
-            _warning "The following AUR packages are not installed:"
-            echo "    $MISSING_AUR"
-            _warning "If you know what you're doing, skip"
-
-            if [[ $(prompt "Install missing packages?") == 1 ]]; then
-                if which yay >/dev/null 2>&1; then
-                    yay -S $MISSING_AUR
-                elif which paru >/dev/null 2>&1; then
-                    paru -S $MISSING_AUR
-                else
-                    _error "No AUR helper found, could not install."
-                    read -r -p "Press ENTER to continue..."
-                fi
-            fi
-        fi
-    else
-        _warning "You're not using an arch/arch based distro. This script wont work"
-        read -r -p "Press ENTER to continue..."
+    # the repo must live in the home folder so that stow targets ~ properly
+    if [[ "$HOME" != *"/$(basename "$SRC")" && "$(basename "$SRC")" != "dotfiles" ]]; then
+        _warning "The repo should be cloned into $HOME/dotfiles so stow targets ~"
+        [[ $(prompt "Continue anyway?") == 0 ]] && exit 1
     fi
 }
 
-# ============================================================================ #
-#                              INSTALL REQUIREMENT                             #
-# ============================================================================ #
-sudo pacman -Syu --needed base-devel stow
+# ---------------------------------------------------------------------------- #
+#                              SUDO / SYSTEM BASE                               #
+# ---------------------------------------------------------------------------- #
+install_base() {
+    _step "Base packages + system update"
 
-# ============================================================================ #
-#                                    INSTALL                                   #
-# ============================================================================ #
+    # sudo is part of the 'base' group, so it is normally already installed.
+    # If it is missing, it cannot be installed from a non-root shell (chicken
+    # and egg), so just tell the user how to fix it.
+    if ! command -v sudo >/dev/null 2>&1; then
+        _error "sudo is not installed and cannot be installed automatically (requires root)."
+        echo '        From a root shell (su -), run:  pacman -Sy sudo'
+        echo '        Then re-run this script.'
+        exit 1
+    fi
 
-# TODO if a step is canceled, everything should be (ctrl+c)
+    # make sure the current user can actually use sudo before going further.
+    # NB: use 'sudo -v' (validate/refresh credentials) rather than 'sudo true'
+    # so the user is prompted for their password exactly once here, and every
+    # subsequent sudo call in the script runs without re-prompting (the 5 min
+    # timestamp keeps refreshing as the script progresses).
+    if ! sudo -v; then
+        _error "The current user cannot run sudo (not in the 'wheel' group?). Aborting."
+        exit 1
+    fi
 
-## Yay
-# TODO check if already done
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si
+    _step "System update + base packages (base-devel, stow, git, unzip)"
+    sudo pacman -Syu --needed base-devel stow git unzip
+}
 
-## Oh my posh
-# TODO check if already done
-curl -s https://ohmyposh.dev/install.sh | bash -s
+# ---------------------------------------------------------------------------- #
+#                                    YAY                                       #
+# ---------------------------------------------------------------------------- #
+install_yay() {
+    if pacman -Q yay >/dev/null 2>&1 || command -v yay >/dev/null 2>&1; then
+        _info "yay already installed"
+        return
+    fi
+    _step "Installing yay"
+    local tmp
+    tmp=$(mktemp -d)
+    if ! git clone --depth 1 https://aur.archlinux.org/yay.git "$tmp/yay"; then
+        _error "Failed to clone yay from AUR (check your internet connection)."
+        rm -rf "$tmp"
+        exit 1
+    fi
 
-## Everything else
-verify_packages | tee -a $LOG_FILE
+    if [[ ! -f "$tmp/yay/PKGBUILD" ]]; then
+        _error "Clone succeeded but PKGBUILD is missing, aborting."
+        rm -rf "$tmp"
+        exit 1
+    fi
 
-# ============================================================================ #
-#                                     SETUP                                    #
-# ============================================================================ #
+    if ! (cd "$tmp/yay" && makepkg -s --noconfirm -si --skippgpcheck); then
+        _error "Failed to build yay, see output above."
+        rm -rf "$tmp"
+        exit 1
+    fi
+    rm -rf "$tmp"
 
-## ZSH
-# TODO check if already done
-chsh -s $(which zsh)
+    # final check: the binary must actually be available
+    if ! command -v yay >/dev/null 2>&1; then
+        _error "yay build finished but the 'yay' command is not available, aborting."
+        exit 1
+    fi
+    _info "yay installed successfully"
+}
 
-## Oh my posh
-# TODO check if already done
-oh-my-posh font install JetBrainsMono
+# ---------------------------------------------------------------------------- #
+#                                    OHP                                       #
+# ---------------------------------------------------------------------------- #
+install_oh_my_posh() {
+    if command -v oh-my-posh >/dev/null 2>&1; then
+        _info "oh-my-posh already installed"
+    else
+        _step "Installing oh-my-posh"
+        curl -s https://ohmyposh.dev/install.sh | bash -s
+    fi
+}
 
-# TODO Deploy dotfiles
-# ./config/delploy.sh
+# ---------------------------------------------------------------------------- #
+#                                   PACKAGES                                   #
+# ---------------------------------------------------------------------------- #
+install_packages() {
+    _step "Verifying required packages"
 
-# TODO copy etc files ?
-# cp ./esthetic/themes/sddm/abstractdark-sddm-theme /usr/share/sddm/themes
-# locale-gen
+    local MISSING MISSING_AUR
+    MISSING=$(check_packages "$SRC/packages.txt")
+    MISSING_AUR=$(check_packages "$SRC/packages.aur.txt")
 
-# SDDM keyboard
-# localectl set-x11-keymap ch
+    if [[ -n "$MISSING" ]]; then
+        _warning "Missing official packages: $MISSING"
+        if [[ $(prompt "Install these packages?") == 1 ]]; then
+            sudo pacman -S --noconfirm $MISSING
+        else
+            _warning "Skipped (if you know what you're doing)"
+        fi
+    else
+        _info "All official packages are already installed"
+    fi
 
-# TODO Grub theme ? must ask for res
+    if [[ "$DESKTOP_MODE" == 1 ]]; then
+        local MISSING_DESK MISSING_AUR_DESK
+        MISSING_DESK=$(check_packages "$SRC/packages.desktop.txt")
+        MISSING_AUR_DESK=$(check_packages "$SRC/packages.aur.desktop.txt")
 
-# TODO Enable services
-# sudo systemctl --user enable --now hyprpolkitagent.service
-# sudo systemctl --user enable --now input-remapper
- 
-# TODO add a message to say what to do afterward. config nextcloud, retrieve ssh key, keepassxc, etc.. 
+        if [[ -n "$MISSING_DESK" ]]; then
+            _warning "Missing desktop packages: $MISSING_DESK"
+            [[ $(prompt "Install these packages?") == 1 ]] && sudo pacman -S --noconfirm $MISSING_DESK
+        fi
+        if [[ -n "$MISSING_AUR_DESK" ]]; then
+            _warning "Missing desktop AUR packages: $MISSING_AUR_DESK"
+            [[ $(prompt "Install these packages?") == 1 ]] && yay -S --noconfirm $MISSING_AUR_DESK
+        fi
+    fi
 
-# things to install and setup
-# nextcloud # gui only ?
-# rclone # Desktop only
+    if [[ -n "$MISSING_AUR" ]]; then
+        # yay may have been skipped earlier, so there might be no AUR helper yet
+        if ! command -v yay >/dev/null 2>&1 && ! command -v paru >/dev/null 2>&1; then
+            _warning "No AUR helper available (yay/paru), installing yay now"
+            install_yay
+        fi
+
+        _warning "Missing AUR packages: $MISSING_AUR"
+        if [[ $(prompt "Install these AUR packages?") == 1 ]]; then
+            if command -v yay >/dev/null 2>&1; then
+                yay -S --noconfirm $MISSING_AUR
+            elif command -v paru >/dev/null 2>&1; then
+                paru -s --noconfirm $MISSING_AUR
+            else
+                _error "No AUR helper found (yay/paru). Install them manually."
+            fi
+        fi
+    fi
+}
+
+# ---------------------------------------------------------------------------- #
+#                                  DOTFILES (STOW)                             #
+# ---------------------------------------------------------------------------- #
+# stow a "package"; on conflict, keep the old version and
+# force the symlink (like stow --adopt, but explicit)
+stow_pkg() {
+    local pkg="$1" target="${2:-$HOME}"
+    # stow must be run from the directory containing the packages (config/)
+    if (cd "$SRC/config" && stow --target "$target" "$pkg") >> "$LOG_FILE" 2>&1; then
+        _info "stow: $pkg -> $target"
+    else
+        _warning "stow: conflict or failure on '$pkg' (old config backed up in ~/.dotfiles-backup/)"
+        if (cd "$SRC/config" && stow --target "$target" --adopt "$pkg") >> "$LOG_FILE" 2>&1; then
+            _info "stow: '$pkg' adopted (old config was moved aside)"
+        else
+            _error "stow: failed to install '$pkg', see $LOG_FILE"
+        fi
+    fi
+}
+
+stow_user_packages() {
+    _step "Deploying dotfiles (stow -> $HOME)"
+
+    # deploy every package found in config/, regardless of whether the
+    # corresponding program is installed (configs stay dormant until used)
+    local pkg
+    for pkg in "$SRC"/config/*/; do
+        pkg=$(basename "$pkg")
+        stow_pkg "$pkg"
+    done
+}
+
+stow_etc_packages() {
+    _step "Deploying /etc files"
+
+    local etc_pkgs=(
+        locale.conf
+        locale.gen
+        sddm.conf
+    )
+
+    local f
+    for f in "${etc_pkgs[@]}"; do
+        local src="$SRC/etc/$f"
+        if [[ ! -f "$src" ]]; then
+            _warning "source not found: $src (skipping)"
+            continue
+        fi
+        _info "deploy: $src -> /etc/$f"
+        # remove existing symlink or file so we can overwrite cleanly
+        if [[ -e "/etc/$f" || -L "/etc/$f" ]]; then
+            sudo rm -f "/etc/$f"
+        fi
+        if sudo cp "$src" "/etc/$f" 2>> "$LOG_FILE"; then
+            _info "/etc/$f deployed"
+        else
+            _error "failed to deploy /etc/$f (see $LOG_FILE)"
+        fi
+    done
+}
+
+# ---------------------------------------------------------------------------- #
+#                                    LOCALE                                    #
+# ---------------------------------------------------------------------------- #
+setup_locale() {
+    _step "Generating locales"
+    sudo locale-gen >> "$LOG_FILE" 2>&1 || _warning "locale-gen failed"
+}
+
+# ---------------------------------------------------------------------------- #
+#                                       SDDM                                   #
+# ---------------------------------------------------------------------------- #
+setup_sddm() {
+    _step "Configuring SDDM"
+
+    # theme
+    sudo mkdir -p /usr/share/sddm/themes
+    sudo cp -r "$SRC/themes/sddm/abstractdark-sddm-theme" /usr/share/sddm/themes/ \
+        && _info "SDDM theme installed" || _error "Failed to install SDDM theme"
+
+    # sddm.conf already stowed into /etc; check the theme value
+    if [[ -f /etc/sddm.conf ]] && grep -q "Current=abstractdark-sddm-theme" /etc/sddm.conf; then
+        _info "sddm.conf OK"
+    else
+        _warning "/etc/sddm.conf does not point to the theme"
+        _info "Current content of /etc/sddm.conf:"
+        cat /etc/sddm.conf 2>/dev/null | sed 's/^/    /' || _info "    (file not found)"
+    fi
+
+    # keyboard
+    if [[ $(prompt "Set X11 keyboard layout to 'ch' (localectl set-x11-keymap ch)?") == 1 ]]; then
+        sudo localectl set-x11-keymap ch && _info "X11 keyboard: ch"
+    fi
+}
+
+# ---------------------------------------------------------------------------- #
+#                                       GRUB                                   #
+# ---------------------------------------------------------------------------- #
+setup_grub() {
+    _step "Configuring GRUB (yorha theme)"
+
+    if [[ ! -f /etc/default/grub ]] || [[ ! -d /boot/grub ]]; then
+        _warning "GRUB not found, skipping"
+        return
+    fi
+
+    local res
+    res=$(prompt_choice "Which resolution for the GRUB theme? (1=1920x1080, 2=2560x1440, 3=3840x2160, other=skip)")
+    case "$res" in
+        1) local theme="$SRC/themes/grub/yorha-1920x1080" ;;
+        2) local theme="$SRC/themes/grub/yorha-2560x1440" ;;
+        3) local theme="$SRC/themes/grub/yorha-3840x2160" ;;
+        *) _warning "GRUB theme skipped"; return ;;
+    esac
+
+    sudo rm -rf /boot/grub/themes/yorha
+    sudo cp -r "$theme" /boot/grub/themes/yorha \
+        && _info "GRUB theme copied to /boot/grub/themes/yorha"
+
+    if grep -q '^GRUB_THEME=' /etc/default/grub; then
+        sudo sed -i 's|^GRUB_THEME=.*|GRUB_THEME="/boot/grub/themes/yorha/theme.txt"|' /etc/default/grub
+    else
+        echo 'GRUB_THEME="/boot/grub/themes/yorha/theme.txt"' | sudo tee -a /etc/default/grub
+    fi
+    _info "GRUB_THEME set"
+
+    if [[ $(prompt "Regenerate GRUB config (grub-mkconfig -o /boot/grub/grub.cfg)?") == 1 ]]; then
+        sudo grub-mkconfig -o /boot/grub/grub.cfg >> "$LOG_FILE" 2>&1 \
+            && _info "grub.cfg regenerated" || _error "grub-mkconfig failed"
+    fi
+}
+
+# ---------------------------------------------------------------------------- #
+#                               MAKE / MAKEPKG                                  #
+# ---------------------------------------------------------------------------- #
+setup_makepkg() {
+    _step "MAKEFLAGS in /etc/makepkg.conf"
+    if grep -q '^MAKEFLAGS=' /etc/makepkg.conf; then
+        sudo sed -i 's|^MAKEFLAGS=.*|MAKEFLAGS="--jobs=$(nproc)"|' /etc/makepkg.conf
+    else
+        echo 'MAKEFLAGS="--jobs=$(nproc)"' | sudo tee -a /etc/makepkg.conf
+    fi
+    _info "MAKEFLAGS=\"--jobs=$(nproc)\" configured"
+}
+
+# ---------------------------------------------------------------------------- #
+#                                   SERVICES                                    #
+# ---------------------------------------------------------------------------- #
+setup_services() {
+    _step "Enabling services"
+
+    # SDDM display manager
+    if systemctl list-unit-files sddm.service >/dev/null 2>&1; then
+        sudo systemctl enable sddm.service && _info "sddm enabled"
+    fi
+
+    command -v hyprpolkitagent >/dev/null 2>&1 \
+        && systemctl --user enable --now hyprpolkitagent.service \
+        && _info "hyprpolkitagent enabled"
+
+    if pacman -Q input-remapper-git >/dev/null 2>&1; then
+        systemctl --user enable --now input-remapper.service && _info "input-remapper enabled"
+    fi
+}
+
+# ---------------------------------------------------------------------------- #
+#                                   SHELL / FONTS                               #
+# ---------------------------------------------------------------------------- #
+setup_shell() {
+    _step "Shell + fonts"
+
+    # only change the user's shell if it is not already zsh
+    if [ "$(getent passwd "$USER" | cut -d: -f7)" != "$(command -v zsh)" ]; then
+        if [[ $(prompt "Change $USER's shell to zsh?") == 1 ]]; then
+            chsh -s "$(command -v zsh)" && _info "Shell -> zsh"
+        fi
+    else
+        _info "Shell already zsh"
+    fi
+
+    # oh-my-posh font (check if already installed first)
+    if fc-list | grep -qi "JetBrains Mono"; then
+        _info "JetBrainsMono font already installed"
+    else
+        oh-my-posh font install JetBrainsMono >> "$LOG_FILE" 2>&1 \
+            && _info "JetBrainsMono font installed" \
+            || _warning "Failed to install JetBrainsMono font (install it manually if needed)"
+    fi
+}
+
+# ---------------------------------------------------------------------------- #
+#                                 SUMMARY / END                                 #
+# ---------------------------------------------------------------------------- #
+final_notes() {
+    _step "Done! Remaining manual steps:"
+    cat <<EOF
+
+    - configure nextcloud / keepassxc (retrieve your data)
+    - retrieve your SSH keys
+    - BTRFS/snapper: add 'grub-btrfs-overlayfs' at the end of the HOOKS array
+      in /etc/mkinitcpio.conf, then run 'sudo mkinitcpio -P'
+    - boot options (if needed, in GRUB_CMDLINE_LINUX_DEFAULT in /etc/default/grub):
+      amdgpu.ppfeaturemask=0x4000  (GPU fan control, see README)
+      split_lock_detect=off       (disable split lock detection)
+    - polkit: see README (bypass password prompt)
+
+    Full log: $LOG_FILE
+EOF
+}
+
+# ---------------------------------------------------------------------------- #
+#                                     MAIN                                     #
+# ---------------------------------------------------------------------------- #
+main() {
+    : > "$LOG_FILE"
+    _info "Log: $LOG_FILE"
+
+    # must be known upfront: yay cannot be built as root (makepkg refuses)
+    if [[ $EUID -eq 0 ]]; then
+        _error "This script must NOT be run as root: yay cannot be installed (makepkg refuses to run as root)."
+        _info "Create a user first if needed, set a password, switch to it, then re-run the script:"
+        echo '    useradd -m -g users -G wheel <username>'
+        echo '    passwd <username>'
+        echo '    su - <username>'
+        _info "Then set the EDITOR variable:"
+        echo '      export EDITOR=nano   # e.g. in ~/.zshrc, or EDITOR="nano" in /etc/makepkg.conf'
+        _info "Finally, grant sudo access to the new user (activate the %wheel line):"
+        echo '      sudo visudo          # uncomment: %wheel  ALL=(ALL:ALL) ALL'
+        exit 1
+    fi
+
+    if [[ $(prompt "Desktop mode (gaming/desktop packages)?") == 1 ]]; then
+        DESKTOP_MODE=1
+    fi
+
+    preflight
+    install_base
+    install_yay
+    install_oh_my_posh
+    install_packages
+    stow_user_packages
+    stow_etc_packages
+    setup_locale
+    setup_sddm
+    setup_grub
+    setup_makepkg
+    setup_shell
+    setup_services
+    final_notes
+}
+
+main "$@"
