@@ -279,10 +279,12 @@ setup_sddm() {
         && _info "SDDM theme installed" || _error "Failed to install SDDM theme"
 
     # sddm.conf already stowed into /etc; check the theme value
-    if grep -q "Current=abstractdark-sddm-theme" /etc/sddm.conf 2>/dev/null; then
+    if [[ -f /etc/sddm.conf ]] && grep -q "Current=abstractdark-sddm-theme" /etc/sddm.conf; then
         _info "sddm.conf OK"
     else
-        _warning "/etc/sddm.conf does not point to the theme, check it manually"
+        _warning "/etc/sddm.conf does not point to the theme"
+        _info "Current content of /etc/sddm.conf:"
+        cat /etc/sddm.conf 2>/dev/null | sed 's/^/    /' || _info "    (file not found)"
     fi
 
     # keyboard
