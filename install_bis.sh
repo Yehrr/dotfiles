@@ -240,7 +240,7 @@ stow_user_packages() {
 }
 
 stow_etc_packages() {
-    _step "Deploying /etc files (stow -> /etc)"
+    _step "Deploying /etc files"
 
     local etc_pkgs=(
         locale.conf
@@ -250,12 +250,21 @@ stow_etc_packages() {
 
     local f
     for f in "${etc_pkgs[@]}"; do
-        [[ -f "$SRC/etc/$f" ]] || continue
-        _info "stow: etc/$f -> /etc"
-        # stow must be run from the directory containing the files (etc/)
-        sudo bash -c "cd '$SRC/etc' && stow --target /etc -- '$f'" >> "$LOG_FILE" 2>&1 \
-            || sudo bash -c "cd '$SRC/etc' && stow --target /etc --adopt -- '$f'" >> "$LOG_FILE" 2>&1 \
-            || _error "stow /etc/$f failed (see $LOG_FILE)"
+        local src="$SRC/etc/$f/$f"
+        if [[ ! -f "$src" ]]; then
+            _warning "source not found: $src (skipping)"
+            continue
+        fi
+        _info "deploy: $src -> /etc/$f"
+        # remove existing symlink or file so we can overwrite cleanly
+        if [[ -e "/etc/$f" || -L "/etc/$f" ]]; then
+            sudo rm -f "/etc/$f"
+        fi
+        if sudo cp "$src" "/etc/$f" 2>> "$LOG_FILE"; then
+            _info "/etc/$f deployed"
+        else
+            _error "failed to deploy /etc/$f (see $LOG_FILE)"
+        fi
     done
 }
 
