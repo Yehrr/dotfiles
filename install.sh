@@ -78,7 +78,7 @@ verify_packages() {
 # ============================================================================ #
 #                              INSTALL REQUIREMENT                             #
 # ============================================================================ #
-sudo pacman -Syu --needed git base-devel stow
+sudo pacman -Syu --needed base-devel stow
 
 # ============================================================================ #
 #                                    INSTALL                                   #
@@ -99,7 +99,6 @@ curl -s https://ohmyposh.dev/install.sh | bash -s
 ## Everything else
 verify_packages | tee -a $LOG_FILE
 
-
 # ============================================================================ #
 #                                     SETUP                                    #
 # ============================================================================ #
@@ -111,8 +110,23 @@ chsh -s $(which zsh)
 ## Oh my posh
 # TODO check if already done
 oh-my-posh font install JetBrainsMono
- 
 
+# TODO Deploy dotfiles
+# ./config/delploy.sh
+
+# TODO copy etc files ?
+# cp ./esthetic/themes/sddm/abstractdark-sddm-theme /usr/share/sddm/themes
+# locale-gen
+
+# SDDM keyboard
+# localectl set-x11-keymap ch
+
+# TODO Grub theme ? must ask for res
+
+# TODO Enable services
+# sudo systemctl --user enable --now hyprpolkitagent.service
+# sudo systemctl --user enable --now input-remapper
+ 
 # TODO add a message to say what to do afterward. config nextcloud, retrieve ssh key, keepassxc, etc.. 
 
 # things to install and setup
