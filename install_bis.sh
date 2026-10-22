@@ -71,13 +71,14 @@ preflight() {
 install_base() {
     _step "Base packages + system update"
 
-    # ensure sudo is available (needed by every step that needs root)
+    # sudo is part of the 'base' group, so it is normally already installed.
+    # If it is missing, it cannot be installed from a non-root shell (chicken
+    # and egg), so just tell the user how to fix it.
     if ! command -v sudo >/dev/null 2>&1; then
-        _step "Installing sudo (required)"
-        if ! pacman -Sy --needed sudo; then
-            _error "Failed to install sudo. Aborting."
-            exit 1
-        fi
+        _error "sudo is not installed and cannot be installed automatically (requires root)."
+        echo '        From a root shell (su -), run:  pacman -Sy sudo'
+        echo '        Then re-run this script.'
+        exit 1
     fi
 
     # make sure the current user can actually use sudo before going further
