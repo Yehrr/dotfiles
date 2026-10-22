@@ -250,7 +250,7 @@ stow_etc_packages() {
 
     local f
     for f in "${etc_pkgs[@]}"; do
-        local src="$SRC/etc/$f/$f"
+        local src="$SRC/etc/$f"
         if [[ ! -f "$src" ]]; then
             _warning "source not found: $src (skipping)"
             continue
@@ -284,7 +284,7 @@ setup_sddm() {
 
     # theme
     sudo mkdir -p /usr/share/sddm/themes
-    sudo cp -r "$SRC/esthetic/themes/sddm/abstractdark-sddm-theme" /usr/share/sddm/themes/ \
+    sudo cp -r "$SRC/themes/sddm/abstractdark-sddm-theme" /usr/share/sddm/themes/ \
         && _info "SDDM theme installed" || _error "Failed to install SDDM theme"
 
     # sddm.conf already stowed into /etc; check the theme value
@@ -316,9 +316,9 @@ setup_grub() {
     local res
     res=$(prompt_choice "Which resolution for the GRUB theme? (1=1920x1080, 2=2560x1440, 3=3840x2160, other=skip)")
     case "$res" in
-        1) local theme="$SRC/esthetic/themes/grub/yorha-1920x1080" ;;
-        2) local theme="$SRC/esthetic/themes/grub/yorha-2560x1440" ;;
-        3) local theme="$SRC/esthetic/themes/grub/yorha-3840x2160" ;;
+        1) local theme="$SRC/themes/grub/yorha-1920x1080" ;;
+        2) local theme="$SRC/themes/grub/yorha-2560x1440" ;;
+        3) local theme="$SRC/themes/grub/yorha-3840x2160" ;;
         *) _warning "GRUB theme skipped"; return ;;
     esac
 
