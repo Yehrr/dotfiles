@@ -158,7 +158,7 @@ install_packages() {
     if [[ -n "$MISSING" ]]; then
         _warning "Missing official packages: $MISSING"
         if [[ $(prompt "Install these packages?") == 1 ]]; then
-            sudo pacman -Sy --noconfirm $MISSING
+            sudo pacman -S --noconfirm $MISSING
         else
             _warning "Skipped (if you know what you're doing)"
         fi
@@ -173,7 +173,7 @@ install_packages() {
 
         if [[ -n "$MISSING_DESK" ]]; then
             _warning "Missing desktop packages: $MISSING_DESK"
-            [[ $(prompt "Install these packages?") == 1 ]] && sudo pacman -Sy --noconfirm $MISSING_DESK
+            [[ $(prompt "Install these packages?") == 1 ]] && sudo pacman -S --noconfirm $MISSING_DESK
         fi
         if [[ -n "$MISSING_AUR_DESK" ]]; then
             _warning "Missing desktop AUR packages: $MISSING_AUR_DESK"
