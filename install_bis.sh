@@ -106,17 +106,20 @@ install_yay() {
     _step "Installing yay"
     local tmp
     tmp=$(mktemp -d)
+    _info "tmp dir: $tmp"
     if ! git clone --depth 1 https://aur.archlinux.org/yay.git "$tmp/yay"; then
         _error "Failed to clone yay from AUR (check your internet connection)."
         rm -rf "$tmp"
         exit 1
     fi
-
+    _info "clone exit: $?"
+    ls -la "$tmp/yay/" | tee -a "$LOG_FILE"
     if [[ ! -f "$tmp/yay/PKGBUILD" ]]; then
         _error "Clone succeeded but PKGBUILD is missing, aborting."
         rm -rf "$tmp"
         exit 1
     fi
+    _info "PKGBUILD exists: yes"
 
     if ! makepkg -sC --noconfirm -si --skippgpcheck -C "$tmp/yay"; then
         _error "Failed to build yay, see output above."
@@ -124,6 +127,13 @@ install_yay() {
         exit 1
     fi
     rm -rf "$tmp"
+
+    # final check: the binary must actually be available
+    if ! command -v yay >/dev/null 2>&1; then
+        _error "yay build finished but the 'yay' command is not available, aborting."
+        exit 1
+    fi
+    _info "yay installed successfully"
 }
 
 # ---------------------------------------------------------------------------- #
