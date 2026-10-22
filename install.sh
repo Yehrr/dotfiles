@@ -12,7 +12,8 @@ set -uo pipefail
 
 SRC="$(cd "$(dirname "$0")" && pwd)"
 LOG_FILE="$SRC/install_bis.log"
-DESKTOP_MODE=0        # 1 if "desktop" mode is requested (gaming/desktop packages)
+DESKTOP_MODE=0        # 1 for desktop, 0 for laptop
+MACHINE=""            # "desktop" or "laptop"
 
 # ---------------------------------------------------------------------------- #
 #                                  HELPERS                                     #
@@ -235,8 +236,13 @@ stow_user_packages() {
     local pkg
     for pkg in "$SRC"/config/*/; do
         pkg=$(basename "$pkg")
+        # noctalia has two variants, handled separately below
+        [[ "$pkg" == "noctalia-desktop" || "$pkg" == "noctalia-laptop" ]] && continue
         stow_pkg "$pkg"
     done
+
+    # noctalia: use the global machine mode
+    stow_pkg "noctalia-$MACHINE"
 }
 
 stow_etc_packages() {
@@ -438,9 +444,14 @@ main() {
         exit 1
     fi
 
-    if [[ $(prompt "Desktop mode (gaming/desktop packages)?") == 1 ]]; then
-        DESKTOP_MODE=1
-    fi
+    local machine_mode
+    machine_mode=$(prompt_choice "Machine type: 1=desktop, 2=laptop")
+    case "$machine_mode" in
+        1) DESKTOP_MODE=1; MACHINE="desktop" ;;
+        2) DESKTOP_MODE=0; MACHINE="laptop" ;;
+        *) _error "Invalid machine type, aborting"; exit 1 ;;
+    esac
+    _info "Machine mode: $MACHINE"
 
     preflight
     install_base
