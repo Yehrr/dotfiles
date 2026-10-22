@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ============================================================================ #
-#                        instal_bis.sh - full setup script                     #
+#                        install_bis.sh - full setup script                    #
 # Installs and configures everything present in this repo:                    #
 #   - packages (repo + AUR, base + optional desktop)                          #
 #   - dotfiles via GNU stow (~ and /etc)                                      #
@@ -52,6 +52,11 @@ log() { tee -a "$LOG_FILE" | cat; }
 # ---------------------------------------------------------------------------- #
 preflight() {
     _step "Pre-flight checks"
+
+    if [[ $EUID -eq 0 ]]; then
+        _warning "This script is being run as root: it should be run as a regular user (it uses sudo where needed)."
+        [[ $(prompt "Continue anyway?") == 0 ]] && exit 1
+    fi
 
     if [[ $EUID -ne 0 ]] && ! sudo -n true >/dev/null 2>&1; then
         _error "This script requires sudo. Aborting."
