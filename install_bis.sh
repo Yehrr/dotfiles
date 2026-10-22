@@ -268,6 +268,7 @@ setup_sddm() {
     _step "Configuring SDDM"
 
     # theme
+    sudo mkdir -p /usr/share/sddm/themes
     sudo cp -r "$SRC/esthetic/themes/sddm/abstractdark-sddm-theme" /usr/share/sddm/themes/ \
         && _info "SDDM theme installed" || _error "Failed to install SDDM theme"
 
