@@ -1,0 +1,255 @@
+config_version = 14
+
+[accessibility]
+ui_scale = 1.2000000104308128
+
+[audio]
+enable_overdrive = true
+
+[bar.default]
+background_opacity = 0.0
+capsule = true
+capsule_padding = 10.0
+capsule_radius = 6
+capsule_thickness = 0.99999998137354851
+center = [ "workspaces" ]
+end = [ "media", "volume", "clock", "notifications", "battery", "control-center" ]
+font_weight = 400
+margin_edge = 10
+margin_ends = 10
+padding = 0
+radius = 8
+scale = 1.350000012665987
+shadow = false
+start = [ "launcher", "group:g1", "tray", "active_window" ]
+thickness = 36
+widget_spacing = 10
+
+    [[bar.default.capsule_group]]
+    accordion = false
+    accordion_direction = "end"
+    enabled = true
+    fill = "surface_variant"
+    id = "g1"
+    members = [ "cpu", "ram", "sysmon" ]
+    opacity = 1.0
+    padding = 10.0
+    radius = 6.0
+
+[brightness]
+enable_ddcutil = false
+
+[calendar]
+
+[control_center]
+hidden_tabs = [ "media", "monitor", "system", "weather", "calendar", "notifications", "screen-time" ]
+
+    [control_center.calendar]
+    show_events_card = false
+
+    [[control_center.shortcuts]]
+    type = "wifi"
+
+    [[control_center.shortcuts]]
+    type = "bluetooth"
+
+    [[control_center.shortcuts]]
+    type = "nightlight"
+
+    [[control_center.shortcuts]]
+    type = "power_profile"
+
+[desktop_widgets]
+enabled = false
+schema_version = 2
+widget_order = []
+
+    [desktop_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [desktop_widgets.widget]
+
+[lockscreen_widgets]
+enabled = false
+schema_version = 2
+widget_order = [ "lockscreen-login-box@HDMI-A-1", "lockscreen-login-box@DP-2", "lockscreen-login-box@DP-1" ]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@DP-1"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 1280.0
+    cy = 1258.0
+    output = "DP-1"
+    placement_height = 1440.0
+    placement_width = 2560.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@DP-1".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@DP-2"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 1280.0
+    cy = 1258.0
+    output = "DP-2"
+    placement_height = 1440.0
+    placement_width = 2560.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@DP-2".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@HDMI-A-1"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 1280.0
+    cy = 1258.0
+    output = "HDMI-A-1"
+    placement_height = 1440.0
+    placement_width = 2560.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@HDMI-A-1".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+[notification]
+layer = "overlay"
+max_visible = 3
+
+[osd]
+offset_y = 150
+position = "bottom_center"
+position_vertical = "bottom_center"
+scale = 1.2000000104308128
+
+    [osd.kinds]
+    bluetooth = false
+    brightness = false
+    caffeine = false
+    dnd = false
+    keyboard_backlight = false
+    keyboard_layout = false
+    media = false
+    nightlight = false
+    power_profile = false
+    privacy = false
+    volume_input = false
+    wifi = false
+
+[shell.launcher]
+categories = false
+
+[shell.panel]
+control_center_placement = "floating"
+open_near_click_control_center = true
+
+[theme]
+builtin = "Catppuccin"
+mode = "dark"
+source = "builtin"
+wallpaper_scheme = "m3-content"
+
+[wallpaper]
+directory = "/home/yehrol/dotfiles/esthetic/wallpapers"
+
+    [wallpaper.default]
+    path = "/home/yehrol/dotfiles/esthetic/wallpapers/221.png"
+
+    [wallpaper.last]
+    path = "/home/yehrol/dotfiles/esthetic/wallpapers/221.png"
+
+    [wallpaper.monitors.DP-1]
+    path = "/home/yehrol/dotfiles/esthetic/wallpapers/221.png"
+
+    [wallpaper.monitors.DP-2]
+    path = "/home/yehrol/dotfiles/esthetic/wallpapers/221.png"
+
+[weather]
+enabled = false
+
+[widget.clock]
+format = "{:%H:%M, %d %B %Y}"
+
+[widget.control-center]
+glyph = "navigation-filled"
+
+[widget.cpu]
+visualization = "none"
+
+[widget.media]
+artist_first = true
+hide_when_no_media = true
+max_length = 350
+title_scroll = "on_hover"
+
+[widget.ram]
+stat = "ram_pct"
+visualization = "none"
+
+[widget.sysmon]
+stat = "disk_free"
+visualization = "none"
+
+[widget.tray]
+detached_panel = true
+drawer = true
+drawer_columns = 5
+pinned = [ "Nextcloud", "Vesktop", "KeePassXC", "net.lutris.Lutris", "steam", "Ankama Launcher1", "udiskie" ]
+
+[widget.volume.actions]
+scroll_down = "volume-down 2"
+scroll_up = "volume-up 2"
+
+[widget.workspaces]
+font_weight = 800
+scale = 1.1000000000000001
