@@ -91,8 +91,8 @@ install_base() {
         exit 1
     fi
 
-    _step "System update + base packages (base-devel, stow, git)"
-    sudo pacman -Syu --needed base-devel stow git
+    _step "System update + base packages (base-devel, stow, git, unzip)"
+    sudo pacman -Syu --needed base-devel stow git unzip
 }
 
 # ---------------------------------------------------------------------------- #
