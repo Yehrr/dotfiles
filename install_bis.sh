@@ -35,6 +35,12 @@ prompt() {
     fi
 }
 
+prompt_choice() {
+    local CHOICE=""
+    read -r -p "$1"$'\033[32m \033[0m' CHOICE
+    echo "$CHOICE"
+}
+
 # list the packages from $1 that are not installed
 check_packages() {
     local PKG
@@ -297,7 +303,7 @@ setup_grub() {
     fi
 
     local res
-    res=$(prompt "Which resolution for the GRUB theme? (1=1920x1080, 2=2560x1440, 3=3840x2160, other=skip)")
+    res=$(prompt_choice "Which resolution for the GRUB theme? (1=1920x1080, 2=2560x1440, 3=3840x2160, other=skip)")
     case "$res" in
         1) local theme="$SRC/esthetic/themes/grub/yorha-1920x1080" ;;
         2) local theme="$SRC/esthetic/themes/grub/yorha-2560x1440" ;;
