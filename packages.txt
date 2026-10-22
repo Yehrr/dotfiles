@@ -29,6 +29,7 @@ wpa_supplicant
 # DE
 hyprland
 hyprpolkitagent
+sddm
 noctalia
 xdg-desktop-portal-gtk
 xdg-desktop-portal-hyprland
