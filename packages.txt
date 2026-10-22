@@ -60,6 +60,7 @@ jq
 jujutsu
 kitty
 lazygit
+less
 npm
 nvtop
 rclone
