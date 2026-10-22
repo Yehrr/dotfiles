@@ -53,11 +53,6 @@ log() { tee -a "$LOG_FILE" | cat; }
 preflight() {
     _step "Pre-flight checks"
 
-    if [[ $EUID -ne 0 ]] && ! sudo -n true >/dev/null 2>&1; then
-        _error "This script requires sudo. Aborting."
-        exit 1
-    fi
-
     if ! command -v pacman >/dev/null 2>&1; then
         _error "pacman not found: this script is meant for Arch/Arch-based distros. Aborting."
         exit 1
@@ -71,11 +66,28 @@ preflight() {
 }
 
 # ---------------------------------------------------------------------------- #
-#                                  SYSTEM UPDATE + BASE                        #
+#                              SUDO / SYSTEM BASE                               #
 # ---------------------------------------------------------------------------- #
 install_base() {
-    _step "System update + base packages (stow, base-devel)"
-    sudo pacman -Syu --needed base-devel stow git sudo
+    _step "Base packages + system update"
+
+    # ensure sudo is available (needed by every step that needs root)
+    if ! command -v sudo >/dev/null 2>&1; then
+        _step "Installing sudo (required)"
+        if ! pacman -Sy --needed sudo; then
+            _error "Failed to install sudo. Aborting."
+            exit 1
+        fi
+    fi
+
+    # make sure the current user can actually use sudo before going further
+    if ! sudo -n true >/dev/null 2>&1 && ! sudo true; then
+        _error "The current user cannot run sudo (not in the 'wheel' group?). Aborting."
+        exit 1
+    fi
+
+    _step "System update + base packages (base-devel, stow, git)"
+    sudo pacman -Syu --needed base-devel stow git
 }
 
 # ---------------------------------------------------------------------------- #
@@ -143,6 +155,12 @@ install_packages() {
     fi
 
     if [[ -n "$MISSING_AUR" ]]; then
+        # yay may have been skipped earlier, so there might be no AUR helper yet
+        if ! command -v yay >/dev/null 2>&1 && ! command -v paru >/dev/null 2>&1; then
+            _warning "No AUR helper available (yay/paru), installing yay now"
+            install_yay
+        fi
+
         _warning "Missing AUR packages: $MISSING_AUR"
         if [[ $(prompt "Install these AUR packages?") == 1 ]]; then
             if command -v yay >/dev/null 2>&1; then
