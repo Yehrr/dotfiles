@@ -13,7 +13,7 @@ local browserPerso = "firefox" -- --profile "/home/yehrol/.mozilla/firefox/4seUQ
 local reloadHypr = "hyprctl reload && notify-send \"Hyprland configuration reloaded\""
 
 -- ---------------------------------- DESKTOP --------------------------------- #
-local openhue = "openhue set room Chambre -b"
+local openhue = "~/git/openhue-cli/dist/openhue_linux_amd64_v1/openhue set room Chambre -b"
 local brightness0 = "ddcutil setvcp 10 0 --display 1 & ddcutil setvcp 10 0 --display 2 & ddcutil setvcp 10 0 --display 3"
 local brightness1 = "ddcutil setvcp 10 20 --display 1 & ddcutil setvcp 10 20 --display 2 & ddcutil setvcp 10 20 --display 3"
 local brightness2 = "ddcutil setvcp 10 40 --display 1 & ddcutil setvcp 10 40 --display 2 & ddcutil setvcp 10 40 --display 3"
