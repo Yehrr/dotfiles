@@ -53,11 +53,6 @@ log() { tee -a "$LOG_FILE" | cat; }
 preflight() {
     _step "Pre-flight checks"
 
-    if [[ $EUID -eq 0 ]]; then
-        _warning "This script is being run as root: it should be run as a regular user (it uses sudo where needed)."
-        [[ $(prompt "Continue anyway?") == 0 ]] && exit 1
-    fi
-
     if [[ $EUID -ne 0 ]] && ! sudo -n true >/dev/null 2>&1; then
         _error "This script requires sudo. Aborting."
         exit 1
@@ -359,6 +354,15 @@ EOF
 main() {
     : > "$LOG_FILE"
     _info "Log: $LOG_FILE"
+
+    # must be known upfront: yay cannot be built as root (makepkg refuses)
+    if [[ $EUID -eq 0 ]]; then
+        _error "This script must NOT be run as root: yay cannot be installed (makepkg refuses to run as root)."
+        _info "Create a user first if needed, then re-run the script as that user:"
+        echo '    sudo useradd -m -g users -G wheel -s /usr/bin/zsh <username>'
+        echo '    sudo passwd -u <username>   # unlock the account'
+        exit 1
+    fi
 
     if [[ $(prompt "Desktop mode (gaming/desktop packages)?") == 1 ]]; then
         DESKTOP_MODE=1
