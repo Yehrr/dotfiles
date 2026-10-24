@@ -207,16 +207,19 @@ wallpaper_scheme = "m3-content"
 directory = "/home/yehrol/dotfiles/themes/wallpapers"
 
     [wallpaper.default]
-    path = "/home/yehrol/dotfiles/esthetic/wallpapers/221.png"
+    path = "/home/yehrol/dotfiles/themes/wallpapers/221.png"
 
     [wallpaper.last]
-    path = "/home/yehrol/dotfiles/esthetic/wallpapers/221.png"
+    path = "/home/yehrol/dotfiles/themes/wallpapers/221.png"
 
     [wallpaper.monitors.DP-1]
-    path = "/home/yehrol/dotfiles/esthetic/wallpapers/221.png"
+    path = "/home/yehrol/dotfiles/themes/wallpapers/221.png"
 
     [wallpaper.monitors.DP-2]
-    path = "/home/yehrol/dotfiles/esthetic/wallpapers/221.png"
+    path = "/home/yehrol/dotfiles/themes/wallpapers/221.png"
+
+    [wallpaper.monitors.HDMI-A-1]
+    path = "/home/yehrol/dotfiles/themes/wallpapers/221.png"
 
 [weather]
 enabled = false
