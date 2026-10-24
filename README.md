@@ -1,47 +1,11 @@
 # dotfiles
 
+- install packages
+- configure sddm/grub theme
+- enable some service
 - manage config files
 - uses GNU stow
   - by default stow set the target to the parent dir of the stow directory
-
-## Usage
-
-1. clone the repo in the home folder
-2. `stow <package name>` to load a package (ex: `stow zsh` inside `dotfiles`)
-   - `stow -t <target-dir> <package name>` to select target dir (ex: `stow -t /etc/coolercontrol cooler-control`)
-
-# Install
-
-## SDDM
-
-### keyboard layout
-
-```
-localectl set-x11-keymap ch
-```
-
-### theme
-
-- copy the dir `dotfiles/esthetic/themes/sddm/abstractdark-sddm-theme` to `/usr/share/sddm/themes`
-- edit the file `/etc/sddm.conf` and set to:
-
-```
-[Theme]
-Current=abstractdark-sddm-theme
-```
-
-## Grub
-
-- copy the right dir in `dotfiles/esthetic/themes/grub` to `/boot/grub/themes` and rename it to `yorha`
-- edit the file `/etc/default/grub` and set `GRUB_THEME="/boot/grub/themes/yorha/theme.txt"`
-- update grub `sudo grub-mkconfig -o /boot/grub/grub.cfg`
-
-## UWSM
-- TODO clean
-```
-sudo systemctl --user enable --now hyprpolkitagent.service
-sudo systemctl --user enable --now input-remapper # if installed
-```
 
 # Other
 
