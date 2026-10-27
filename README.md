@@ -14,6 +14,11 @@
 sudo pacman -U ~/.cache/yay/xpadneo-dkms/xpadneo-dkms-0.9.8-1-any.pkg.tar.zst
 ```
 
+## Pi sandboxing
+```
+ln --symbolic /home/yehrol/dotfiles/scripts/pi/docker/pi-dock /home/yehrol/.local/bin/pi-dock
+```
+
 ## Make
 
 set `MAKEFLAGS="--jobs=$(nproc)"` in /etc/makepkg.conf to use all core
