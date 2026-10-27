@@ -23,11 +23,11 @@ while getopts ":nh" opt; do
   esac
 done
 
-# build image if not found
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-if ! docker image inspect "$IMAGE" >/dev/null 2>&1; then
-  docker build -t "$IMAGE" -f "$SCRIPT_DIR/Dockerfile" "$SCRIPT_DIR"
-fi
+# build image on every launch
+# resolve symlinks so SCRIPT_DIR points to the real script location
+SCRIPT_PATH="$(readlink -f "$0" 2>/dev/null || realpath "$0" 2>/dev/null || echo "$0")"
+SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
+docker build -t "$IMAGE" -f "$SCRIPT_DIR/Dockerfile" "$SCRIPT_DIR"
 
 if [ "$NETWORK" != "host" ]; then
   if ! docker network inspect "$NETWORK" >/dev/null 2>&1; then
