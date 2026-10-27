@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ============================================================================ #
-#                        install_bis.sh - full setup script                    #
+#                        install.sh - full setup script                    #
 # Installs and configures everything present in this repo:                    #
 #   - packages (repo + AUR, base + optional desktop)                          #
 #   - dotfiles via GNU stow (~ and /etc)                                      #
@@ -11,7 +11,7 @@
 set -uo pipefail
 
 SRC="$(cd "$(dirname "$0")" && pwd)"
-LOG_FILE="$SRC/install_bis.log"
+LOG_FILE="$SRC/install.log"
 DESKTOP_MODE=0        # 1 for desktop, 0 for laptop
 MACHINE=""            # "desktop" or "laptop"
 
