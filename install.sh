@@ -376,6 +376,13 @@ setup_services() {
     if pacman -Q input-remapper-git >/dev/null 2>&1; then
         systemctl --user enable --now input-remapper.service && _info "input-remapper enabled"
     fi
+
+    # ssh-agent (user service, socket-activated, unit shipped with openssh)
+    if systemctl --user cat ssh-agent.socket >/dev/null 2>&1; then
+        systemctl --user enable --now ssh-agent.socket && _info "ssh-agent enabled (user service)"
+    else
+        _warning "ssh-agent user unit not found, skipping"
+    fi
 }
 
 # ---------------------------------------------------------------------------- #
