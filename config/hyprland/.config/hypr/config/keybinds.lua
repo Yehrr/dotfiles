@@ -9,7 +9,7 @@ local launcher = "noctalia msg panel-toggle launcher"
 local fileManager = "thunar" -- TODO: switch to yazi ?
 local screenshot = "noctalia msg screenshot-region"
 local browserPerso = "firefox" -- --profile "/home/yehrol/.mozilla/firefox/4seUQjF1.Profile 1" # FIXME no way of doing this with new profile for now
--- $browserWork = firefox #-P "Work" # FIXME no way of doing this with new profile for now
+-- $browserWork = "firefox -P 'Work'" # FIXME no way of doing this with new profile for now
 local reloadHypr = "hyprctl reload && notify-send \"Hyprland configuration reloaded\""
 
 -- ---------------------------------- DESKTOP --------------------------------- #
@@ -82,23 +82,35 @@ hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "left" }))
 hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down" }))
+hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "left" }))
+hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
+hl.bind(mainMod .. " + up", hl.dsp.focus({ direction = "up" }))
+hl.bind(mainMod .. " + down", hl.dsp.focus({ direction = "down" }))
 
 -- Move active window with mainMod + SHIFT + vim control
 hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ direction = "l" }))
 hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ direction = "r" }))
 hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "u" }))
 hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "d" }))
+hl.bind(mainMod .. " + SHIFT + left", hl.dsp.window.move({ direction = "l" }))
+hl.bind(mainMod .. " + SHIFT + right", hl.dsp.window.move({ direction = "r" }))
+hl.bind(mainMod .. " + SHIFT + up", hl.dsp.window.move({ direction = "u" }))
+hl.bind(mainMod .. " + SHIFT + down", hl.dsp.window.move({ direction = "d" }))
 
 -- Resize active window with mainMod + CTRL + vim control
 hl.bind(mainMod .. " + CTRL + H", hl.dsp.window.resize({ x = -30, y = 0, relative = true }), { locked = true, repeating = true })
 hl.bind(mainMod .. " + CTRL + L", hl.dsp.window.resize({ x = 30, y = 0, relative = true }), { locked = true, repeating = true })
 hl.bind(mainMod .. " + CTRL + K", hl.dsp.window.resize({ x = 0, y = -30, relative = true }), { locked = true, repeating = true })
 hl.bind(mainMod .. " + CTRL + J", hl.dsp.window.resize({ x = 0, y = 30, relative = true }), { locked = true, repeating = true })
+hl.bind(mainMod .. " + CTRL + left", hl.dsp.window.resize({ x = -30, y = 0, relative = true }), { locked = true, repeating = true })
+hl.bind(mainMod .. " + CTRL + right", hl.dsp.window.resize({ x = 30, y = 0, relative = true }), { locked = true, repeating = true })
+hl.bind(mainMod .. " + CTRL + up", hl.dsp.window.resize({ x = 0, y = -30, relative = true }), { locked = true, repeating = true })
+hl.bind(mainMod .. " + CTRL + down", hl.dsp.window.resize({ x = 0, y = 30, relative = true }), { locked = true, repeating = true })
 
 -- --------------------------------- WORKSPACE -------------------------------- #
 
-hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
+-- hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
+-- hl.bind(mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
 
 -- Switch workspaces with mainMod + [0-9]
 hl.bind(mainMod .. " + 1", hl.dsp.focus({ workspace = 1 }))
