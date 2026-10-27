@@ -383,6 +383,24 @@ setup_services() {
     else
         _warning "ssh-agent user unit not found, skipping"
     fi
+
+    # Pipewire services
+    if systemctl list-unit-files pipewire.service >/dev/null 2>&1; then
+        sudo systemctl enable --now pipewire.service && _info "pipewire enabled"
+    fi
+    if systemctl list-unit-files wireplumber.service >/dev/null 2>&1; then
+        sudo systemctl enable --now wireplumber.service && _info "wireplumber enabled"
+    fi
+    if systemctl list-unit-files pipewire-pulse.service >/dev/null 2>&1; then
+        sudo systemctl enable --now pipewire-pulse.service && _info "pipewire-pulse enabled"
+    fi
+
+    # Upower for laptop
+    if [[ "$MACHINE" == "laptop" ]]; then
+        if systemctl list-unit-files upower.service >/dev/null 2>&1; then
+            sudo systemctl enable --now upower.service && _info "upower enabled"
+        fi
+    fi
 }
 
 # ---------------------------------------------------------------------------- #
