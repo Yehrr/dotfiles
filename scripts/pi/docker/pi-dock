@@ -4,21 +4,21 @@ set -euo pipefail
 IMAGE=pi-dock
 NET=pi-dock-net
 NETWORK="$NET"
+HOST_IP=127.0.0.1
 
 usage() {
   cat <<EOF
-Usage: pi-dock [-n network]
+Usage: pi-dock [-n]
 
-  -n network   Docker network to use (default: $NET, "host" for host networking)
+  -n           Use "host" networking (default: $NET)
   -h           Show this help
 EOF
 }
 
-while getopts ":n:h" opt; do
+while getopts ":nh" opt; do
   case "$opt" in
-    n) NETWORK="$OPTARG" ;;
+    n) NETWORK=host ;;
     h) usage; exit 0 ;;
-    :) echo "Error: -${OPTARG} requires an argument" >&2; usage >&2; exit 1 ;;
     *) usage >&2; exit 1 ;;
   esac
 done
@@ -29,11 +29,7 @@ if ! docker image inspect "$IMAGE" >/dev/null 2>&1; then
   docker build -t "$IMAGE" -f "$SCRIPT_DIR/Dockerfile" "$SCRIPT_DIR"
 fi
 
-if [ "$NETWORK" = "host" ]; then
-  # Host networking: the container shares the host's network stack
-  HOST_IP="$(hostname -I 2>/dev/null | awk '{print $1}')"
-  [ -n "$HOST_IP" ] || HOST_IP=127.0.0.1
-else
+if [ "$NETWORK" != "host" ]; then
   if ! docker network inspect "$NETWORK" >/dev/null 2>&1; then
     docker network create --internal "$NETWORK" >/dev/null
   fi
