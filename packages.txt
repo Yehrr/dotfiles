@@ -20,9 +20,13 @@ linux-lts
 linux-lts-headers
 make
 networkmanager
+pipewire
+pipewire-pulse
+wireplumber
 snap-pac
 snapper
 sudo
+upower
 uwsm
 wpa_supplicant
 
