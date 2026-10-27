@@ -55,8 +55,8 @@ hl.bind("XF86AudioMute", hl.dsp.exec_cmd("noctalia msg volume-mute"), { locked =
 -- -------------------------------- BRIGHTNESS -------------------------------- #
 -- bindel = ,XF86MonBrightnessUp, exec, brightnessctl s 10%+
 -- bindel = ,XF86MonBrightnessDown, exec, brightnessctl s 10%-
--- hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("qs ipc call brightness increase"), { locked = true, repeating = true })
--- hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("qs ipc call brightness decrease"), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("noctalia msg brightness-up 5"), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("noctalia msg brightness-down 5"), { locked = true, repeating = true })
 
 -- --------------------------- MEDIA PLAYER CONTROL --------------------------- #
 -- Requires playerctl
