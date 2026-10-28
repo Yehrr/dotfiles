@@ -7,6 +7,7 @@ base-devel
 blueman
 brightnessctl
 cmake
+ddcutil
 efibootmgr
 git
 git-lfs
@@ -28,6 +29,7 @@ snapper
 sudo
 upower
 uwsm
+wl-clipboard
 wpa_supplicant
 
 # DE
