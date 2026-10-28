@@ -10,16 +10,16 @@ hl.monitor({
 })
 
 hl.monitor({
-    output = "DP-4",
-    mode = "2560x1440@165",
-    position = "auto",
+    output = "DP-1",
+    mode = "2560x1440", -- no 165hz
+    position = "1920x0",
     scale = "1",
 })
 
 hl.monitor({
     output = "HDMI-A-1",
-    mode = "2560x1440@165",
-    position = "auto",
+    mode = "2560x1440", -- no 165hz
+    position = "4480x0",
     scale = "1",
 })
 
@@ -34,3 +34,16 @@ hl.monitor({
 -- ============================================================================ #
 --                                   WORKSPACE                                  #
 -- ============================================================================ #
+
+-- only if main monitor off
+hl.workspace_rule({workspace="1", monitor="DP-1", persistent=true})
+hl.workspace_rule({workspace="2", monitor="DP-1", persistent=true})
+hl.workspace_rule({workspace="3", monitor="DP-1", persistent=true})
+hl.workspace_rule({workspace="4", monitor="DP-1", persistent=true})
+hl.workspace_rule({workspace="5", monitor="DP-1", persistent=true})
+
+hl.workspace_rule({workspace="6", monitor="HDMI-A-1", persistent=true})
+hl.workspace_rule({workspace="7", monitor="HDMI-A-1", persistent=true})
+hl.workspace_rule({workspace="8", monitor="HDMI-A-1", persistent=true})
+hl.workspace_rule({workspace="9", monitor="HDMI-A-1", persistent=true})
+hl.workspace_rule({workspace="10", monitor="HDMI-A-1", persistent=true})
