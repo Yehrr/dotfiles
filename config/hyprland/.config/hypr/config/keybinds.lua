@@ -14,9 +14,10 @@ local reloadHypr = "hyprctl reload && notify-send \"Hyprland configuration reloa
 
 -- ---------------------------------- DESKTOP --------------------------------- #
 local openhue = "~/git/perso/openhue-cli/dist/openhue_linux_amd64_v1/openhue set room Chambre -b"
-local brightness0 = "ddcutil setvcp 10 0 --display 1 & ddcutil setvcp 10 0 --display 2 & ddcutil setvcp 10 0 --display 3"
+local brightness0 = "ddcutil setvcp 10 0  --display 1 & ddcutil setvcp 10 0  --display 2 & ddcutil setvcp 10 0  --display 3"
 local brightness1 = "ddcutil setvcp 10 20 --display 1 & ddcutil setvcp 10 20 --display 2 & ddcutil setvcp 10 20 --display 3"
 local brightness2 = "ddcutil setvcp 10 40 --display 1 & ddcutil setvcp 10 40 --display 2 & ddcutil setvcp 10 40 --display 3"
+local brightness3 = "ddcutil setvcp 10 65 --display 1 & ddcutil setvcp 10 65 --display 2 & ddcutil setvcp 10 65 --display 3"
 
 -- ============================================================================ #
 --                                   KEYBINDS                                   #

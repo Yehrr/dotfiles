@@ -44,4 +44,5 @@ docker run --rm -it \
   -e HOST_IP="$HOST_IP" \
   -v "$PWD:/workspace" \
   -v pi-agent-home:/root/.pi/agent \
+  -v /home/yehrol/.agents:/root/.agents \
   $IMAGE

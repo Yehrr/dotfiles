@@ -20,6 +20,13 @@ ln --symbolic /home/yehrol/dotfiles/scripts/pi/docker/pi-dock /home/yehrol/.loca
 ln --symbolic /home/yehrol/dotfiles/scripts/pi/docker/pi-safe /home/yehrol/.local/bin/pi-safe
 systemctl --user enable --now hyprpolkitagent.service
 systemctl --user enable --now upower.service
+
+swapfile
+btrfs subvolume create /swap
+btrfs filesystem mkswapfile --size 4g /swap/swapfile
+swapon /swap/swapfile
+
+fix polkit issue on laptop
 ```
 
 ## Make
@@ -40,3 +47,15 @@ set `MAKEFLAGS="--jobs=$(nproc)"` in /etc/makepkg.conf to use all core
 
 ## Polkit
 - https://wiki.archlinux.org/title/Polkit#Bypass_password_prompt
+
+```
+❯ sudo cat /etc/polkit-1/rules.d/49-nopasswd_global.rules
+/* Allow members of the wheel group to execute any actions
+ * without password authentication, similar to "sudo NOPASSWD:"
+ */
+polkit.addRule(function(action, subject) {
+    if (subject.isInGroup("wheel")) {
+        return polkit.Result.YES;
+    }
+});
+```
