@@ -14,9 +14,12 @@
 sudo pacman -U ~/.cache/yay/xpadneo-dkms/xpadneo-dkms-0.9.8-1-any.pkg.tar.zst
 ```
 
-## Pi sandboxing
+## todo
 ```
 ln --symbolic /home/yehrol/dotfiles/scripts/pi/docker/pi-dock /home/yehrol/.local/bin/pi-dock
+ln --symbolic /home/yehrol/dotfiles/scripts/pi/docker/pi-safe /home/yehrol/.local/bin/pi-safe
+systemctl --user enable --now hyprpolkitagent.service
+systemctl --user enable --now upower.service
 ```
 
 ## Make
