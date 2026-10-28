@@ -307,10 +307,13 @@ directory = "/home/yehr/dotfiles/themes/wallpapers"
     path = "/home/yehr/dotfiles/themes/wallpapers/221.png"
 
     [wallpaper.monitors.DP-1]
-    path = "/home/yehrol/dotfiles/esthetic/wallpapers/221.png"
+    path = "/home/yehr/dotfiles/themes/wallpapers/221.png"
 
     [wallpaper.monitors.DP-2]
     path = "/home/yehrol/dotfiles/esthetic/wallpapers/221.png"
+
+    [wallpaper.monitors.HDMI-A-1]
+    path = "/home/yehr/dotfiles/themes/wallpapers/221.png"
 
     [wallpaper.monitors.eDP-1]
     path = "/home/yehr/dotfiles/themes/wallpapers/221.png"
